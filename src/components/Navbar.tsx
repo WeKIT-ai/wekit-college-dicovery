@@ -41,7 +41,7 @@ export function Navbar() {
           <a href="https://www.wekitmentoring.com/students" target="_blank" rel="noopener noreferrer" className="text-foreground hover:text-primary transition-colors">
             Mentoring
           </a>
-          <Link to="/feedback" className="text-foreground hover:text-primary transition-colors">
+          <Link to="/auth" className="text-foreground hover:text-primary transition-colors">
             Rate College
           </Link>
         </div>

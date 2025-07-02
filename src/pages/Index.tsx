@@ -56,19 +56,11 @@ const Index = () => {
                 Explore Colleges
               </Link>
             </Button>
-            {user ? (
-              <Button asChild variant="outline" size="lg" className="text-lg px-8 py-4 bg-white/10 border-white text-white hover:bg-white hover:text-primary">
-                <Link to="/feedback">
-                  Rate College
-                </Link>
-              </Button>
-            ) : (
-              <Button asChild variant="outline" size="lg" className="text-lg px-8 py-4 bg-white/10 border-white text-white hover:bg-white hover:text-primary">
-                <Link to="/auth">
-                  Get Started
-                </Link>
-              </Button>
-            )}
+            <Button asChild variant="outline" size="lg" className="text-lg px-8 py-4 bg-white/10 border-white text-white hover:bg-white hover:text-primary">
+              <Link to="/auth">
+                Rate College
+              </Link>
+            </Button>
           </div>
           
           {/* Stats */}
