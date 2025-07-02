@@ -1826,6 +1826,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      award_coins: {
+        Args: {
+          p_user_id: string
+          p_amount: number
+          p_activity_type: string
+          p_description: string
+        }
+        Returns: undefined
+      }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: Database["public"]["Enums"]["app_role"]
