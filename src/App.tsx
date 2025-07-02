@@ -10,6 +10,7 @@ import Discover from "./pages/Discover";
 import Compare from "./pages/Compare";
 import Feedback from "./pages/Feedback";
 import Auth from "./pages/Auth";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
               <Route path="/discover" element={<Discover />} />
               <Route path="/compare" element={<Compare />} />
               <Route path="/feedback" element={<Feedback />} />
+              <Route path="/admin" element={<Admin />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
