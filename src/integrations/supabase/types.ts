@@ -39,6 +39,51 @@ export type Database = {
         }
         Relationships: []
       }
+      calendly_webhooks: {
+        Row: {
+          created_at: string
+          event_data: Json
+          event_type: string
+          id: string
+          mentor_id: string | null
+          mentoring_request_id: string | null
+          processed: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          event_data: Json
+          event_type: string
+          id?: string
+          mentor_id?: string | null
+          mentoring_request_id?: string | null
+          processed?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          event_data?: Json
+          event_type?: string
+          id?: string
+          mentor_id?: string | null
+          mentoring_request_id?: string | null
+          processed?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendly_webhooks_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "mentor_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calendly_webhooks_mentoring_request_id_fkey"
+            columns: ["mentoring_request_id"]
+            isOneToOne: false
+            referencedRelation: "mentoring_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       career_roadmaps: {
         Row: {
           career_family: string
@@ -644,6 +689,9 @@ export type Database = {
         Row: {
           availability: Json | null
           bio: string | null
+          booking_preferences: Json | null
+          calendly_event_type: string | null
+          calendly_username: string | null
           communication_style:
             | Database["public"]["Enums"]["communication_style"]
             | null
@@ -668,6 +716,7 @@ export type Database = {
           personality_scores: Json | null
           position: string | null
           preferred_meeting_times: Json | null
+          scheduling_enabled: boolean | null
           skill_assessments: Json | null
           specialties: string[] | null
           time_zone: string | null
@@ -677,6 +726,9 @@ export type Database = {
         Insert: {
           availability?: Json | null
           bio?: string | null
+          booking_preferences?: Json | null
+          calendly_event_type?: string | null
+          calendly_username?: string | null
           communication_style?:
             | Database["public"]["Enums"]["communication_style"]
             | null
@@ -701,6 +753,7 @@ export type Database = {
           personality_scores?: Json | null
           position?: string | null
           preferred_meeting_times?: Json | null
+          scheduling_enabled?: boolean | null
           skill_assessments?: Json | null
           specialties?: string[] | null
           time_zone?: string | null
@@ -710,6 +763,9 @@ export type Database = {
         Update: {
           availability?: Json | null
           bio?: string | null
+          booking_preferences?: Json | null
+          calendly_event_type?: string | null
+          calendly_username?: string | null
           communication_style?:
             | Database["public"]["Enums"]["communication_style"]
             | null
@@ -734,6 +790,7 @@ export type Database = {
           personality_scores?: Json | null
           position?: string | null
           preferred_meeting_times?: Json | null
+          scheduling_enabled?: boolean | null
           skill_assessments?: Json | null
           specialties?: string[] | null
           time_zone?: string | null
@@ -1082,48 +1139,63 @@ export type Database = {
       }
       mentoring_requests: {
         Row: {
+          calendly_event_id: string | null
           coins_offered: number | null
           college_id: string | null
           created_at: string
           description: string
           feedback: string | null
           id: string
+          is_scheduling_request: boolean | null
+          meeting_link: string | null
           mentee_id: string
           mentor_id: string | null
           preferred_time: string | null
           rating: number | null
+          scheduled_at: string | null
+          scheduling_status: string | null
           session_notes: string | null
           status: string | null
           subject: string
           updated_at: string
         }
         Insert: {
+          calendly_event_id?: string | null
           coins_offered?: number | null
           college_id?: string | null
           created_at?: string
           description: string
           feedback?: string | null
           id?: string
+          is_scheduling_request?: boolean | null
+          meeting_link?: string | null
           mentee_id: string
           mentor_id?: string | null
           preferred_time?: string | null
           rating?: number | null
+          scheduled_at?: string | null
+          scheduling_status?: string | null
           session_notes?: string | null
           status?: string | null
           subject: string
           updated_at?: string
         }
         Update: {
+          calendly_event_id?: string | null
           coins_offered?: number | null
           college_id?: string | null
           created_at?: string
           description?: string
           feedback?: string | null
           id?: string
+          is_scheduling_request?: boolean | null
+          meeting_link?: string | null
           mentee_id?: string
           mentor_id?: string | null
           preferred_time?: string | null
           rating?: number | null
+          scheduled_at?: string | null
+          scheduling_status?: string | null
           session_notes?: string | null
           status?: string | null
           subject?: string
@@ -1834,6 +1906,16 @@ export type Database = {
           p_description: string
         }
         Returns: undefined
+      }
+      create_scheduling_request: {
+        Args: {
+          p_mentee_id: string
+          p_mentor_id: string
+          p_subject: string
+          p_description: string
+          p_preferred_time?: string
+        }
+        Returns: string
       }
       get_current_user_role: {
         Args: Record<PropertyKey, never>

@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { User, Edit, Trophy, Activity, Coins, Star, Calendar, MapPin, BookOpen } from "lucide-react";
+import { User, Edit, Trophy, Activity, Coins, Star, Calendar, MapPin, BookOpen, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface UserProfile {
@@ -250,14 +250,22 @@ export default function Profile() {
                   </div>
                 </div>
               </div>
-              <Button 
-                variant="outline" 
-                onClick={() => setEditing(true)}
-                className="flex items-center gap-2"
-              >
-                <Edit className="h-4 w-4" />
-                Edit Profile
-              </Button>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setEditing(true)}
+                  className="flex items-center gap-2"
+                >
+                  <Edit className="h-4 w-4" />
+                  Edit Profile
+                </Button>
+                <Button asChild variant="outline" className="flex items-center gap-2">
+                  <Link to="/mentor-scheduling">
+                    <Settings className="h-4 w-4" />
+                    Scheduling
+                  </Link>
+                </Button>
+              </div>
             </div>
           </CardHeader>
           <CardContent>
