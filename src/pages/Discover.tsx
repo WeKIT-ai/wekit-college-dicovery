@@ -7,6 +7,7 @@ import { FeedbackRating } from "@/components/FeedbackRating";
 import { Search, MapPin, Star, Users, Briefcase, Filter } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { MentoringCTA } from "@/components/MentoringCTA";
 
 export default function Discover() {
   const { toast } = useToast();
@@ -197,36 +198,37 @@ export default function Discover() {
             </div>
           ) : (
             <div className="space-y-8">
-              {colleges.map((college) => (
-                <Card key={college.id} className="shadow-card hover:shadow-elegant transition-shadow duration-300">
-                  <CardHeader>
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                      <div>
-                        <CardTitle className="text-2xl text-primary">{college.name}</CardTitle>
-                        <div className="flex items-center gap-2 text-muted-foreground mt-2">
-                          <MapPin className="h-4 w-4" />
-                          <span>{college.city}, {college.state}</span>
-                        </div>
-                        {college.establishment_year && (
-                          <div className="text-sm text-muted-foreground">
-                            Established: {college.establishment_year}
+              {colleges.map((college, index) => (
+                <div key={college.id}>
+                  <Card className="shadow-card hover:shadow-elegant transition-shadow duration-300">
+                    <CardHeader>
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                          <CardTitle className="text-2xl text-primary">{college.name}</CardTitle>
+                          <div className="flex items-center gap-2 text-muted-foreground mt-2">
+                            <MapPin className="h-4 w-4" />
+                            <span>{college.city}, {college.state}</span>
                           </div>
-                        )}
-                      </div>
-                      
-                      <div className="flex flex-col items-end gap-2">
-                        <div className="flex items-center gap-1">
-                          <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                          <span className="font-semibold">{getAverageRating(college.college_feedback)}</span>
-                          <span className="text-sm text-muted-foreground">
-                            ({getRatingCount(college)} reviews)
-                          </span>
+                          {college.establishment_year && (
+                            <div className="text-sm text-muted-foreground">
+                              Established: {college.establishment_year}
+                            </div>
+                          )}
                         </div>
-                        <Button variant="hero" size="sm">
-                          View Details
-                        </Button>
+                        
+                        <div className="flex flex-col items-end gap-2">
+                          <div className="flex items-center gap-1">
+                            <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                            <span className="font-semibold">{getAverageRating(college.college_feedback)}</span>
+                            <span className="text-sm text-muted-foreground">
+                              ({getRatingCount(college)} reviews)
+                            </span>
+                          </div>
+                          <Button variant="hero" size="sm">
+                            View Details
+                          </Button>
+                        </div>
                       </div>
-                    </div>
                     
                     {/* Categories */}
                     <div className="flex flex-wrap gap-2 mt-4">
@@ -321,8 +323,14 @@ export default function Discover() {
                         </Button>
                       </div>
                     )}
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                  
+                  {/* Add mentoring CTA after every 3rd college */}
+                  {(index + 1) % 3 === 0 && (
+                    <MentoringCTA variant="inline" className="my-6" />
+                  )}
+                </div>
               ))}
             </div>
           )}

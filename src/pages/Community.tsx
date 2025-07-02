@@ -13,6 +13,8 @@ import { useToast } from "@/hooks/use-toast";
 import { AIAssistant } from "@/components/AIAssistant";
 import { Users, MessageCircle, Plus, Search, TrendingUp, Award, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
+import { MentoringCTA } from "@/components/MentoringCTA";
+import { CoursesCTA } from "@/components/CoursesCTA";
 
 interface Forum {
   id: string;
@@ -398,6 +400,12 @@ export default function Community() {
                     </CardContent>
                   </Card>
                 )}
+
+                {/* Mentoring CTA */}
+                <MentoringCTA variant="sidebar" className="mb-6" />
+
+                {/* Courses CTA */}
+                <CoursesCTA variant="compact" className="mb-6" />
 
                 {/* AI Assistant for Community Help */}
                 <AIAssistant 

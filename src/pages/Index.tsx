@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import { Search, Users, Award, TrendingUp, Star, ArrowRight } from "lucide-react";
+import { MentoringCTA } from "@/components/MentoringCTA";
+import { CoursesCTA } from "@/components/CoursesCTA";
+import { SuccessStories } from "@/components/SuccessStories";
 
 const Index = () => {
   const { user } = useAuth();
@@ -153,6 +156,15 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Mentoring CTA Section */}
+      <MentoringCTA variant="hero" />
+
+      {/* Courses Section */}
+      <CoursesCTA variant="banner" />
+
+      {/* Success Stories */}
+      <SuccessStories />
 
       {/* CTA Section */}
       <section className="py-20 px-4">

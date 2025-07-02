@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Navbar } from "./components/Navbar";
+import { MentoringCTA } from "./components/MentoringCTA";
+import { PromoBanner } from "./components/PromoBanner";
 import Index from "./pages/Index";
 import Discover from "./pages/Discover";
 import Compare from "./pages/Compare";
@@ -25,6 +27,7 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <div className="min-h-screen">
+            <PromoBanner />
             <Navbar />
             <Routes>
               <Route path="/" element={<Index />} />
@@ -38,6 +41,9 @@ const App = () => (
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            
+            {/* Floating CTA - shown on non-auth pages */}
+            <MentoringCTA variant="floating" />
           </div>
         </AuthProvider>
       </BrowserRouter>
