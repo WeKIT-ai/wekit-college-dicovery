@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
 import { Search, Users, Award, TrendingUp, Star, ArrowRight } from "lucide-react";
 
 const Index = () => {
+  const { user } = useAuth();
   const stats = [
     { label: "Youth Mentored", value: "10,000+", icon: Users },
     { label: "Expert Mentors", value: "500+", icon: Award },
@@ -54,11 +56,19 @@ const Index = () => {
                 Explore Colleges
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="text-lg px-8 py-4 bg-white/10 border-white text-white hover:bg-white hover:text-primary">
-              <Link to="/feedback">
-                Share Your Experience
-              </Link>
-            </Button>
+            {user ? (
+              <Button asChild variant="outline" size="lg" className="text-lg px-8 py-4 bg-white/10 border-white text-white hover:bg-white hover:text-primary">
+                <Link to="/feedback">
+                  Share Your Experience
+                </Link>
+              </Button>
+            ) : (
+              <Button asChild variant="outline" size="lg" className="text-lg px-8 py-4 bg-white/10 border-white text-white hover:bg-white hover:text-primary">
+                <Link to="/auth">
+                  Get Started
+                </Link>
+              </Button>
+            )}
           </div>
           
           {/* Stats */}
@@ -171,11 +181,19 @@ const Index = () => {
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="text-lg px-8 py-4">
-                  <Link to="/compare">
-                    Compare Colleges
-                  </Link>
-                </Button>
+                {user ? (
+                  <Button asChild variant="outline" size="lg" className="text-lg px-8 py-4">
+                    <Link to="/compare">
+                      Compare Colleges
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button asChild variant="outline" size="lg" className="text-lg px-8 py-4">
+                    <Link to="/auth">
+                      Sign Up Now
+                    </Link>
+                  </Button>
+                )}
               </div>
             </CardContent>
           </Card>

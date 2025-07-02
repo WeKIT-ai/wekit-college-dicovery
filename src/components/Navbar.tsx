@@ -1,10 +1,23 @@
 import { Link } from "react-router-dom";
 import { CoinBalance } from "./CoinBalance";
 import { Button } from "@/components/ui/button";
-import { Search, User, Menu } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Search, User, Menu, LogOut } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function Navbar() {
+  const { user, signOut } = useAuth();
   const userCoins = 1250; // This would come from user context
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
@@ -35,15 +48,35 @@ export function Navbar() {
 
         {/* Right Side */}
         <div className="flex items-center gap-4">
-          <CoinBalance balance={userCoins} />
+          {user && <CoinBalance balance={userCoins} />}
           
           <Button variant="ghost" size="icon" className="hidden md:flex">
             <Search className="h-4 w-4" />
           </Button>
           
-          <Button variant="ghost" size="icon">
-            <User className="h-4 w-4" />
-          </Button>
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <User className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem disabled>
+                  {user.email}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button asChild variant="hero" size="sm">
+              <Link to="/auth">Sign In</Link>
+            </Button>
+          )}
           
           <Button variant="ghost" size="icon" className="md:hidden">
             <Menu className="h-4 w-4" />
