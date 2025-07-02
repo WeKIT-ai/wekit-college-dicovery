@@ -3,10 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Search, Plus, X, Star, Users, Briefcase, MapPin, GraduationCap, Bot } from "lucide-react";
+import { Search, Plus, X, Star, Users, Briefcase, MapPin, GraduationCap } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { AIAssistant } from "@/components/AIAssistant";
 
 export default function Compare() {
   const { toast } = useToast();
@@ -357,18 +356,6 @@ export default function Compare() {
               </div>
             </CardContent>
           </Card>
-        )}
-
-        {/* AI Assistant for Comparison Help */}
-        {compareColleges.length > 0 && (
-          <div className="mt-8">
-            <AIAssistant 
-              contextType="college_comparison"
-              contextData={compareColleges}
-              placeholder="Ask me to help compare these colleges..."
-              className="max-w-2xl mx-auto"
-            />
-          </div>
         )}
 
         {selectedColleges.length === 0 && (
