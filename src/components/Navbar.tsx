@@ -38,11 +38,11 @@ export function Navbar() {
           <Link to="/compare" className="text-foreground hover:text-primary transition-colors">
             Compare
           </Link>
-          <Link to="/mentoring" className="text-foreground hover:text-primary transition-colors">
+          <a href="https://www.wekitmentoring.com/students" target="_blank" rel="noopener noreferrer" className="text-foreground hover:text-primary transition-colors">
             Mentoring
-          </Link>
+          </a>
           <Link to="/feedback" className="text-foreground hover:text-primary transition-colors">
-            Share Feedback
+            Rate College
           </Link>
         </div>
 

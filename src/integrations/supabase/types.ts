@@ -78,6 +78,128 @@ export type Database = {
         }
         Relationships: []
       }
+      college_feedback: {
+        Row: {
+          academics_rating: number | null
+          campus_life_rating: number | null
+          college_id: string | null
+          course: string | null
+          created_at: string
+          facilities_rating: number | null
+          graduation_year: string | null
+          id: string
+          is_anonymous: boolean | null
+          is_verified: boolean | null
+          overall_rating: number | null
+          placements_rating: number | null
+          review_text: string | null
+          safety_rating: number | null
+          title: string | null
+          updated_at: string
+          user_id: string | null
+          would_recommend: string | null
+        }
+        Insert: {
+          academics_rating?: number | null
+          campus_life_rating?: number | null
+          college_id?: string | null
+          course?: string | null
+          created_at?: string
+          facilities_rating?: number | null
+          graduation_year?: string | null
+          id?: string
+          is_anonymous?: boolean | null
+          is_verified?: boolean | null
+          overall_rating?: number | null
+          placements_rating?: number | null
+          review_text?: string | null
+          safety_rating?: number | null
+          title?: string | null
+          updated_at?: string
+          user_id?: string | null
+          would_recommend?: string | null
+        }
+        Update: {
+          academics_rating?: number | null
+          campus_life_rating?: number | null
+          college_id?: string | null
+          course?: string | null
+          created_at?: string
+          facilities_rating?: number | null
+          graduation_year?: string | null
+          id?: string
+          is_anonymous?: boolean | null
+          is_verified?: boolean | null
+          overall_rating?: number | null
+          placements_rating?: number | null
+          review_text?: string | null
+          safety_rating?: number | null
+          title?: string | null
+          updated_at?: string
+          user_id?: string | null
+          would_recommend?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "college_feedback_college_id_fkey"
+            columns: ["college_id"]
+            isOneToOne: false
+            referencedRelation: "colleges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      college_photos: {
+        Row: {
+          caption: string | null
+          college_id: string | null
+          created_at: string
+          feedback_id: string | null
+          id: string
+          is_approved: boolean | null
+          photo_type: string | null
+          photo_url: string
+          user_id: string | null
+        }
+        Insert: {
+          caption?: string | null
+          college_id?: string | null
+          created_at?: string
+          feedback_id?: string | null
+          id?: string
+          is_approved?: boolean | null
+          photo_type?: string | null
+          photo_url: string
+          user_id?: string | null
+        }
+        Update: {
+          caption?: string | null
+          college_id?: string | null
+          created_at?: string
+          feedback_id?: string | null
+          id?: string
+          is_approved?: boolean | null
+          photo_type?: string | null
+          photo_url?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "college_photos_college_id_fkey"
+            columns: ["college_id"]
+            isOneToOne: false
+            referencedRelation: "colleges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "college_photos_feedback_id_fkey"
+            columns: ["feedback_id"]
+            isOneToOne: false
+            referencedRelation: "college_feedback"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       colleges: {
         Row: {
           accreditation_body: string | null

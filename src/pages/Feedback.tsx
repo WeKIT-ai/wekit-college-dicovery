@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,13 +9,20 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { CoinBalance } from "@/components/CoinBalance";
-import { Star, Upload, Eye, EyeOff, Award, Camera } from "lucide-react";
+import { PhotoUpload } from "@/components/PhotoUpload";
+import { Star, Eye, EyeOff, Award } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Feedback() {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [colleges, setColleges] = useState<any[]>([]);
+  const [selectedCollegeId, setSelectedCollegeId] = useState("");
+  const [feedbackId, setFeedbackId] = useState<string | null>(null);
   const [ratings, setRatings] = useState({
     academics: [4],
     campusLife: [4],
@@ -36,15 +43,75 @@ export default function Feedback() {
     additionalComments: ""
   });
 
+  useEffect(() => {
+    fetchColleges();
+  }, []);
+
+  const fetchColleges = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('colleges')
+        .select('id, name, city, state')
+        .order('name');
+      
+      if (error) throw error;
+      setColleges(data || []);
+    } catch (error) {
+      console.error('Error fetching colleges:', error);
+    }
+  };
+
   const coinsToEarn = isAnonymous ? 50 : 100; // More coins for verified feedback
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Feedback Submitted!",
-      description: `Thank you for sharing your experience. You earned ${coinsToEarn} WeKIT coins!`,
-    });
-    // Reset form or redirect
+    
+    if (!user || !selectedCollegeId) {
+      toast({
+        title: "Error",
+        description: "Please login and select a college to submit feedback",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('college_feedback')
+        .insert({
+          user_id: user.id,
+          college_id: selectedCollegeId,
+          overall_rating: Math.round((ratings.academics[0] + ratings.campusLife[0] + ratings.facilities[0] + ratings.safety[0] + ratings.placements[0]) / 5),
+          academics_rating: ratings.academics[0],
+          campus_life_rating: ratings.campusLife[0],
+          facilities_rating: ratings.facilities[0],
+          safety_rating: ratings.safety[0],
+          placements_rating: ratings.placements[0],
+          title: `Review for ${colleges.find(c => c.id === selectedCollegeId)?.name}`,
+          review_text: formData.overallExperience,
+          course: formData.course,
+          graduation_year: formData.graduationYear,
+          would_recommend: formData.wouldRecommend,
+          is_anonymous: isAnonymous
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      
+      setFeedbackId(data.id);
+      
+      toast({
+        title: "Feedback Submitted!",
+        description: `Thank you for sharing your experience. You earned ${coinsToEarn} WeKIT coins!`,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to submit feedback",
+        variant: "destructive"
+      });
+    }
   };
 
   const updateRating = (category: string, value: number[]) => {
@@ -115,15 +182,20 @@ export default function Feedback() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="college">College Name *</Label>
-                    <Select value={formData.college} onValueChange={(value) => setFormData({...formData, college: value})}>
+                    <Select value={selectedCollegeId} onValueChange={(value) => {
+                      setSelectedCollegeId(value);
+                      const college = colleges.find(c => c.id === value);
+                      setFormData({...formData, college: college?.name || ""});
+                    }}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select your college" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="iit-delhi">IIT Delhi</SelectItem>
-                        <SelectItem value="iit-bombay">IIT Bombay</SelectItem>
-                        <SelectItem value="du">Delhi University</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
+                        {colleges.map(college => (
+                          <SelectItem key={college.id} value={college.id}>
+                            {college.name} - {college.city}, {college.state}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -162,7 +234,7 @@ export default function Feedback() {
                   onClick={() => setCurrentStep(2)} 
                   className="w-full" 
                   variant="hero"
-                  disabled={!formData.college || !formData.course || !formData.graduationYear}
+                  disabled={!selectedCollegeId || !formData.course || !formData.graduationYear}
                 >
                   Continue to Ratings
                 </Button>
@@ -309,17 +381,16 @@ export default function Feedback() {
                 </div>
 
                 {/* Photo Upload */}
-                <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
-                  <Camera className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="font-semibold mb-2">Add Photos (Optional)</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Share campus photos to help other students visualize the environment
-                  </p>
-                  <Button variant="outline" type="button">
-                    <Upload className="h-4 w-4 mr-2" />
-                    Upload Photos
-                  </Button>
-                </div>
+                <PhotoUpload 
+                  collegeId={selectedCollegeId}
+                  feedbackId={feedbackId}
+                  onPhotosUploaded={(urls) => {
+                    toast({
+                      title: "Photos uploaded!",
+                      description: `${urls.length} photo(s) uploaded successfully`
+                    });
+                  }}
+                />
 
                 <div>
                   <Label htmlFor="additionalComments">Additional Comments</Label>
@@ -345,7 +416,7 @@ export default function Feedback() {
                     type="submit" 
                     variant="hero"
                     className="flex-1"
-                    disabled={!formData.overallExperience || !formData.wouldRecommend}
+                    disabled={!formData.overallExperience || !formData.wouldRecommend || !selectedCollegeId}
                   >
                     <Award className="h-4 w-4 mr-2" />
                     Submit & Earn {coinsToEarn} Coins

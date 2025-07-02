@@ -59,7 +59,7 @@ const Index = () => {
             {user ? (
               <Button asChild variant="outline" size="lg" className="text-lg px-8 py-4 bg-white/10 border-white text-white hover:bg-white hover:text-primary">
                 <Link to="/feedback">
-                  Share Your Experience
+                  Rate College
                 </Link>
               </Button>
             ) : (
