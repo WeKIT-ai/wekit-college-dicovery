@@ -1,69 +1,94 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Search, Plus, X, Star, Users, Briefcase, MapPin, GraduationCap } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Compare() {
+  const { toast } = useToast();
   const [selectedColleges, setSelectedColleges] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [colleges, setColleges] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock data
-  const colleges = [
-    {
-      id: "iit-delhi",
-      name: "IIT Delhi",
-      location: "New Delhi",
-      type: "Public",
-      established: 1961,
-      rating: 4.5,
-      students: "11,000+",
-      placement: "98%",
-      fees: "₹2.5L/year",
-      rankings: { nirf: 2, qs: 185 },
-      strengths: ["Research", "Faculty", "Placements", "Alumni Network"],
-      academics: 4.6,
-      campusLife: 4.2,
-      facilities: 4.4,
-      safety: 4.5
-    },
-    {
-      id: "iit-bombay",
-      name: "IIT Bombay",
-      location: "Mumbai",
-      type: "Public",
-      established: 1958,
-      rating: 4.6,
-      students: "10,000+",
-      placement: "99%",
-      fees: "₹2.5L/year",
-      rankings: { nirf: 1, qs: 172 },
-      strengths: ["Innovation", "Industry Connect", "Research", "Entrepreneurship"],
-      academics: 4.7,
-      campusLife: 4.3,
-      facilities: 4.5,
-      safety: 4.4
-    },
-    {
-      id: "du",
-      name: "Delhi University",
-      location: "New Delhi",
-      type: "Public",
-      established: 1922,
-      rating: 4.2,
-      students: "130,000+",
-      placement: "85%",
-      fees: "₹30K/year",
-      rankings: { nirf: 11, qs: 521 },
-      strengths: ["Diversity", "Liberal Arts", "Social Life", "Culture"],
-      academics: 4.0,
-      campusLife: 4.5,
-      facilities: 3.8,
-      safety: 4.1
+  useEffect(() => {
+    fetchColleges();
+  }, [searchQuery]);
+
+  const fetchColleges = async () => {
+    try {
+      setLoading(true);
+      let query = supabase
+        .from('colleges')
+        .select(`
+          *,
+          college_feedback (
+            overall_rating,
+            academics_rating,
+            campus_life_rating,
+            facilities_rating,
+            safety_rating,
+            placements_rating
+          )
+        `)
+        .order('nirf_ranking', { ascending: true, nullsFirst: false });
+
+      if (searchQuery) {
+        query = query.or(`name.ilike.%${searchQuery}%,city.ilike.%${searchQuery}%,state.ilike.%${searchQuery}%`);
+      }
+
+      const { data, error } = await query.limit(20);
+      if (error) throw error;
+      
+      // Transform data to match the expected format
+      const transformedData = data?.map(college => ({
+        id: college.id,
+        name: college.name,
+        location: `${college.city}, ${college.state}`,
+        type: college.institution_type || 'Unknown',
+        established: college.establishment_year || 'Unknown',
+        rating: college.college_feedback?.length > 0 
+          ? (college.college_feedback.reduce((sum: number, f: any) => sum + (f.overall_rating || 0), 0) / college.college_feedback.length).toFixed(1)
+          : '0.0',
+        students: college.student_capacity ? `${college.student_capacity}+` : 'N/A',
+        placement: 'N/A', // Would need placement data
+        fees: 'N/A', // Would need fee data
+        rankings: { 
+          nirf: college.nirf_ranking || 'Unranked', 
+          qs: 'N/A' 
+        },
+        strengths: Array.isArray(college.departments) ? college.departments.slice(0, 4) : [],
+        academics: college.college_feedback?.length > 0 
+          ? (college.college_feedback.reduce((sum: number, f: any) => sum + (f.academics_rating || 0), 0) / college.college_feedback.length).toFixed(1)
+          : '0.0',
+        campusLife: college.college_feedback?.length > 0 
+          ? (college.college_feedback.reduce((sum: number, f: any) => sum + (f.campus_life_rating || 0), 0) / college.college_feedback.length).toFixed(1)
+          : '0.0',
+        facilities: college.college_feedback?.length > 0 
+          ? (college.college_feedback.reduce((sum: number, f: any) => sum + (f.facilities_rating || 0), 0) / college.college_feedback.length).toFixed(1)
+          : '0.0',
+        safety: college.college_feedback?.length > 0 
+          ? (college.college_feedback.reduce((sum: number, f: any) => sum + (f.safety_rating || 0), 0) / college.college_feedback.length).toFixed(1)
+          : '0.0',
+        ...college
+      })) || [];
+
+      setColleges(transformedData);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to fetch colleges",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
+  // Remove mock data section and update the existing logic
   const availableColleges = colleges.filter(college => 
     !selectedColleges.includes(college.id) &&
     college.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -82,6 +107,17 @@ export default function Compare() {
   const removeCollege = (collegeId: string) => {
     setSelectedColleges(selectedColleges.filter(id => id !== collegeId));
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading colleges...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background py-8 px-4">
