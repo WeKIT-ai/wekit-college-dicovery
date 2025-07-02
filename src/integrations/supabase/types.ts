@@ -78,6 +78,141 @@ export type Database = {
         }
         Relationships: []
       }
+      colleges: {
+        Row: {
+          accreditation_body: string | null
+          accreditation_grade: string | null
+          address: string | null
+          admission_process: string | null
+          affiliation_status: string | null
+          city: string
+          college_code: string | null
+          college_type: string | null
+          courses_offered: Json | null
+          created_at: string
+          data_source: string | null
+          departments: Json | null
+          description: string | null
+          district: string | null
+          email: string | null
+          establishment_year: number | null
+          facilities: Json | null
+          fee_structure: Json | null
+          hostel_available: boolean | null
+          id: string
+          institution_type: string | null
+          last_verified_at: string | null
+          latitude: number | null
+          library_available: boolean | null
+          longitude: number | null
+          name: string
+          nirf_category: string | null
+          nirf_ranking: number | null
+          notable_alumni: Json | null
+          official_name: string | null
+          other_rankings: Json | null
+          phone: string | null
+          pincode: string | null
+          placement_details: Json | null
+          sports_facilities: boolean | null
+          state: string
+          student_capacity: number | null
+          total_seats: number | null
+          university_affiliation: string | null
+          updated_at: string
+          verification_status: string | null
+          website_url: string | null
+        }
+        Insert: {
+          accreditation_body?: string | null
+          accreditation_grade?: string | null
+          address?: string | null
+          admission_process?: string | null
+          affiliation_status?: string | null
+          city: string
+          college_code?: string | null
+          college_type?: string | null
+          courses_offered?: Json | null
+          created_at?: string
+          data_source?: string | null
+          departments?: Json | null
+          description?: string | null
+          district?: string | null
+          email?: string | null
+          establishment_year?: number | null
+          facilities?: Json | null
+          fee_structure?: Json | null
+          hostel_available?: boolean | null
+          id?: string
+          institution_type?: string | null
+          last_verified_at?: string | null
+          latitude?: number | null
+          library_available?: boolean | null
+          longitude?: number | null
+          name: string
+          nirf_category?: string | null
+          nirf_ranking?: number | null
+          notable_alumni?: Json | null
+          official_name?: string | null
+          other_rankings?: Json | null
+          phone?: string | null
+          pincode?: string | null
+          placement_details?: Json | null
+          sports_facilities?: boolean | null
+          state: string
+          student_capacity?: number | null
+          total_seats?: number | null
+          university_affiliation?: string | null
+          updated_at?: string
+          verification_status?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          accreditation_body?: string | null
+          accreditation_grade?: string | null
+          address?: string | null
+          admission_process?: string | null
+          affiliation_status?: string | null
+          city?: string
+          college_code?: string | null
+          college_type?: string | null
+          courses_offered?: Json | null
+          created_at?: string
+          data_source?: string | null
+          departments?: Json | null
+          description?: string | null
+          district?: string | null
+          email?: string | null
+          establishment_year?: number | null
+          facilities?: Json | null
+          fee_structure?: Json | null
+          hostel_available?: boolean | null
+          id?: string
+          institution_type?: string | null
+          last_verified_at?: string | null
+          latitude?: number | null
+          library_available?: boolean | null
+          longitude?: number | null
+          name?: string
+          nirf_category?: string | null
+          nirf_ranking?: number | null
+          notable_alumni?: Json | null
+          official_name?: string | null
+          other_rankings?: Json | null
+          phone?: string | null
+          pincode?: string | null
+          placement_details?: Json | null
+          sports_facilities?: boolean | null
+          state?: string
+          student_capacity?: number | null
+          total_seats?: number | null
+          university_affiliation?: string | null
+          updated_at?: string
+          verification_status?: string | null
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       communication_logs: {
         Row: {
           attachments: Json | null
