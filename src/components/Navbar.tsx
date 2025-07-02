@@ -13,7 +13,6 @@ import {
 
 export function Navbar() {
   const { user, signOut } = useAuth();
-  const userCoins = 1250; // This would come from user context
 
   const handleSignOut = async () => {
     await signOut();
@@ -51,7 +50,7 @@ export function Navbar() {
 
         {/* Right Side */}
         <div className="flex items-center gap-4">
-          {user && <CoinBalance balance={userCoins} />}
+          {user && <CoinBalance />}
           
           <Button variant="ghost" size="icon" className="hidden md:flex">
             <Search className="h-4 w-4" />
@@ -69,6 +68,12 @@ export function Navbar() {
                   {user.email}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/profile" className="flex items-center w-full">
+                    <User className="mr-2 h-4 w-4" />
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="mr-2 h-4 w-4" />
                   Sign Out

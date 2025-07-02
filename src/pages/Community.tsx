@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { AIAssistant } from "@/components/AIAssistant";
 import { Users, MessageCircle, Plus, Search, TrendingUp, Award, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -397,6 +398,13 @@ export default function Community() {
                     </CardContent>
                   </Card>
                 )}
+
+                {/* AI Assistant for Community Help */}
+                <AIAssistant 
+                  contextType="forum_assistance"
+                  placeholder="Ask me about college life, career guidance, or any academic questions..."
+                  className="w-full"
+                />
               </div>
             </div>
           </div>
