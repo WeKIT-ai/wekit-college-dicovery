@@ -3,6 +3,8 @@ import { CoinBalance } from "./CoinBalance";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { Search, User, Menu, LogOut } from "lucide-react";
+import { useState, useEffect } from "react";
+import { SearchCommandPalette } from "./SearchCommandPalette";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,10 +15,27 @@ import {
 
 export function Navbar() {
   const { user, signOut } = useAuth();
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
   };
+
+  // Global keyboard shortcut for search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+      if (e.key === 'Escape') {
+        setSearchOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
@@ -52,8 +71,17 @@ export function Navbar() {
         <div className="flex items-center gap-4">
           {user && <CoinBalance />}
           
-          <Button variant="ghost" size="icon" className="hidden md:flex">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="hidden md:flex relative"
+            onClick={() => setSearchOpen(true)}
+            title="Search (Ctrl+K)"
+          >
             <Search className="h-4 w-4" />
+            <span className="absolute -top-1 -right-1 text-xs bg-muted text-muted-foreground px-1 rounded opacity-70">
+              ⌘K
+            </span>
           </Button>
           
           {user ? (
@@ -86,11 +114,26 @@ export function Navbar() {
             </Button>
           )}
           
+          {/* Mobile Search Button */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="md:hidden"
+            onClick={() => setSearchOpen(true)}
+            title="Search"
+          >
+            <Search className="h-4 w-4" />
+          </Button>
+          
+          {/* Mobile Menu Button */}
           <Button variant="ghost" size="icon" className="md:hidden">
             <Menu className="h-4 w-4" />
           </Button>
         </div>
       </div>
+      
+      {/* Search Command Palette */}
+      <SearchCommandPalette open={searchOpen} onOpenChange={setSearchOpen} />
     </nav>
   );
 }

@@ -8,6 +8,7 @@ import { Search, MapPin, Star, Users, Briefcase, Filter } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { MentoringCTA } from "@/components/MentoringCTA";
+import { WeKITIntegration } from "@/components/WeKITIntegration";
 
 export default function Discover() {
   const { toast } = useToast();
@@ -326,8 +327,13 @@ export default function Discover() {
                     </CardContent>
                   </Card>
                   
+                  {/* Add WeKIT integration after every 5th college */}
+                  {(index + 1) % 5 === 0 && (
+                    <WeKITIntegration variant="inline" className="my-8" />
+                  )}
+                  
                   {/* Add mentoring CTA after every 3rd college */}
-                  {(index + 1) % 3 === 0 && (
+                  {(index + 1) % 3 === 0 && (index + 1) % 5 !== 0 && (
                     <MentoringCTA variant="inline" className="my-6" />
                   )}
                 </div>

@@ -15,6 +15,7 @@ import { Users, MessageCircle, Plus, Search, TrendingUp, Award, Calendar } from 
 import { Link } from "react-router-dom";
 import { MentoringCTA } from "@/components/MentoringCTA";
 import { CoursesCTA } from "@/components/CoursesCTA";
+import { WeKITIntegration } from "@/components/WeKITIntegration";
 
 interface Forum {
   id: string;
@@ -400,6 +401,9 @@ export default function Community() {
                     </CardContent>
                   </Card>
                 )}
+
+                {/* WeKIT Integration */}
+                <WeKITIntegration variant="sidebar" className="mb-6" />
 
                 {/* Mentoring CTA */}
                 <MentoringCTA variant="sidebar" className="mb-6" />

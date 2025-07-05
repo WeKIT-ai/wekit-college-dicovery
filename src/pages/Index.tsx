@@ -6,6 +6,7 @@ import { Search, Users, Award, TrendingUp, Star, ArrowRight } from "lucide-react
 import { MentoringCTA } from "@/components/MentoringCTA";
 import { CoursesCTA } from "@/components/CoursesCTA";
 import { SuccessStories } from "@/components/SuccessStories";
+import { WeKITIntegration } from "@/components/WeKITIntegration";
 
 const Index = () => {
   const { user } = useAuth();
@@ -156,6 +157,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* WeKIT Ecosystem Integration */}
+      <WeKITIntegration variant="hero" />
 
       {/* Mentoring CTA Section */}
       <MentoringCTA variant="hero" />
